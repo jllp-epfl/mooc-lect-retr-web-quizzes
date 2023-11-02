@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOOC Lecture retrieval </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* vh stands for viewport height */
+}
+
+form {
+  width: 20%; /* adjust this value to control the form's width */
+}
+    </style>
+</head>
+<body>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <!-- <h1>MOOC Lecture retrieval</h1> -->
+    <!-- <div class="form-container"> -->
+    <form id="myForm" style="margin: auto;width: 50%;">
+        {% csrf_token %}
+        <input type="text" id="inputField" name="inputField" style="width:70%;">
+        <button type="submit" >Search</button>
+    </form>
+    <!-- </div> -->
+    <div id="result"></div>
+    <div id="videoContainer" style="margin: auto;width: 50%;"></div>
+    <!-- <div id="videoContainer"></div> -->
+
+    <script>
+        $('#myForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "submit_form" %}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    // $('#result').text('Received: ' + JSON.stringify(response.received_data));
+                    var videoURL = response.video_url;
+                    var start_time = response.start_time;
+                    var end_time = response.end_time;
+                    // Check if the video URL is received
+                    if (videoURL) {
+                        var video = '<video width="640" height="480" controls>';
+                        video += '<source src="' + videoURL + '#t='+start_time+','+end_time+'" type="video/mp4">';
+                        video += 'Your browser does not support the video tag.';
+                        video += '</video>';
+                        $('#videoContainer').html(video);
+                    } else {
+                        $('#videoContainer').html('Video URL not available.');
+                    }
+                },
+                error: function(response) {
+                    $('#result').text('Error occurred');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
