@@ -26,7 +26,8 @@ form {
     <!-- <div class="form-container"> -->
     <form id="myForm" style="margin: auto;width: 50%;">
         {% csrf_token %}
-        <input type="text" id="inputField" name="inputField" style="width:70%;">
+        <input type="text" id="question" name="question" style="width:70%;">
+        <input type="text" id="num_results" name="num_results" style="width:10%;">
         <button type="submit" >Search</button>
     </form>
     <!-- </div> -->
